@@ -28,12 +28,12 @@ It runs always-on, learns permanently from being taught, and is read-only by des
 
 ```mermaid
 flowchart LR
-    U[Team member<br/>@-mentions in Slack] --> B(Patriot One AI)
-    B <--> LLM[Claude<br/>reasoning + tool use]
-    B --> SQL[(Salesforce mirror<br/>read-only SQL)]
-    B --> KB[Intranet SOPs<br/>+ live records]
-    B --> F[File reader<br/>PDF / image / docs]
-    B --> CSV[CSV export<br/>+ download link]
+    U["Team member<br/>@-mentions in Slack"] --> B("Patriot One AI")
+    B <--> LLM["Claude<br/>reasoning + tool use"]
+    B --> SQL[("Salesforce mirror<br/>read-only SQL")]
+    B --> KB["Intranet SOPs<br/>+ live records"]
+    B --> F["File reader<br/>PDF / image / docs"]
+    B --> CSV["CSV export<br/>+ download link"]
     B --> U
 ```
 

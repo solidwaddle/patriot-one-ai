@@ -7,24 +7,24 @@ Patriot One AI is a single always-on service that bridges Slack, a large languag
 ```mermaid
 flowchart TB
     subgraph Slack
-      M[@-mention in channel]
+      M["@-mention in channel"]
     end
 
     subgraph Service["Patriot One AI service (always-on)"]
-      APP[Slack event handler<br/>Socket Mode]
-      AGENT[Agent loop<br/>Claude + tool dispatch]
-      FILES[File reader]
-      EXPORT[CSV exporter]
-      KNOW[Knowledge / lessons]
+      APP["Slack event handler<br/>Socket Mode"]
+      AGENT["Agent loop<br/>Claude + tool dispatch"]
+      FILES["File reader"]
+      EXPORT["CSV exporter"]
+      KNOW["Knowledge / lessons"]
     end
 
     subgraph Sources["Read-only data sources"]
-      DB[(Salesforce mirror<br/>Postgres)]
-      SOP[Intranet SOPs<br/>cloned repo]
-      LIVE[Live records<br/>secured read-only API]
+      DB[("Salesforce mirror<br/>Postgres")]
+      SOP["Intranet SOPs<br/>cloned repo"]
+      LIVE["Live records<br/>secured read-only API"]
     end
 
-    HOST[Static host<br/>serves exported files]
+    HOST["Static host<br/>serves exported files"]
 
     M --> APP --> AGENT
     AGENT <--> FILES
