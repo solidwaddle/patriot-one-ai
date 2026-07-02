@@ -20,7 +20,8 @@ It runs always-on, learns permanently from being taught, and is read-only by des
 | 📤 **Export to CSV** | Turns query results into a downloadable CSV and returns a working link. |
 | 📚 **Knows the playbook** | Searches the company intranet's SOPs/policies and reads live operational records. |
 | 🧠 **Learns** | Teach it a rule once (`remember: …`) and it applies it forever. |
-| 🔒 **Read-only & safe** | Only `SELECT`/`WITH` queries, with row and time caps. Cannot change source systems. |
+| 🔄 **Continual improvement** *(next phase)* | Capture company-wide observations, classify and trend them, and drive the monthly QP-160-1 review. See **[docs/CONTINUAL-IMPROVEMENT.md](docs/CONTINUAL-IMPROVEMENT.md)**. |
+| 🔒 **Read-only & safe** | Only `SELECT`/`WITH` queries against source systems, with row and time caps. Cannot change Salesforce, the intranet, or any source system. |
 
 ---
 
@@ -72,6 +73,7 @@ See **[docs/CAPABILITIES.md](docs/CAPABILITIES.md)** for the full capability lis
 - [ ] Authenticated, expiring links for exported artifacts
 - [ ] Consolidation toward a single team-wide agent across all data sources
 - [ ] Spec-drafting for Salesforce automation, grounded in live org metadata (human-in-the-loop, sandbox-first)
+- [ ] **Continual Improvement Project** — observation capture, AI-assisted analysis, and the monthly QP-160-1 review cadence (the system's first controlled write path; see [docs/CONTINUAL-IMPROVEMENT.md](docs/CONTINUAL-IMPROVEMENT.md))
 
 ---
 
