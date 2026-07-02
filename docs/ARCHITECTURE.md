@@ -52,8 +52,19 @@ flowchart TB
 
 - **Read-only query guard** — the SQL tool accepts exactly one `SELECT`/`WITH` statement; anything else is rejected before execution.
 - **Resource caps** — row limit and statement timeout on every query.
-- **No write path** — there is no tool that mutates Salesforce, the intranet, or any source system. Generated artifacts (CSV exports) are written only to an isolated host directory.
+- **No write path to source systems** — no tool mutates Salesforce, the intranet, or any source system. Generated artifacts (CSV exports) are written only to an isolated host directory. The one exception is the Continual Improvement observation store, which the bot owns (see below) — it is not a source system.
 - **Scoped data exposure** — the live-records API is allow-listed; sensitive tables are never reachable.
+
+## Controlled write path — Continual Improvement
+
+> Planned phase. See **[CONTINUAL-IMPROVEMENT.md](CONTINUAL-IMPROVEMENT.md)** for the full design.
+
+The Continual Improvement Project (QP-160-1) introduces the system's first write capability. It is deliberately narrow, so the read-only guarantee for every source system is preserved:
+
+- **Scoped to one entity.** Writes go only to a purpose-built `observations` store that Patriot One owns — a sibling of the operational records it already reads, not a source system. There is still no path to mutate Salesforce, the intranet, or SOPs.
+- **Validated interface, not free SQL.** Observation create/update goes through a defined interface with field validation and an enforced state machine, not the read-only SQL tool. The SQL guard is unchanged.
+- **Human-controlled lifecycle.** Employees can create observations and append detail; risk, phase, ownership, and closure are leadership-assigned. Corrective actions remain in Salesforce and are referenced (read), never written, by the bot.
+- **Auditable and retained.** Phase/status transitions are retained as an audit trail; records are kept a minimum of 3 years per QP-160-1 §9.
 
 ## Reasoning engine
 
