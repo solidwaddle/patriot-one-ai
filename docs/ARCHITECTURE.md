@@ -59,12 +59,24 @@ flowchart TB
 
 > Planned phase. See **[CONTINUAL-IMPROVEMENT.md](CONTINUAL-IMPROVEMENT.md)** for the full design.
 
-The Continual Improvement Project (QP-160-1) introduces the system's first write capability. It is deliberately narrow, so the read-only guarantee for every source system is preserved:
+The Continual Improvement Project (QP-160-1) introduces the system's first write capability. Observations are stored in Salesforce as a custom object (`Observation__c`), and the entire lifecycle — submission and review — happens in Slack. The write path is deliberately isolated so the read-only guarantee is preserved:
 
-- **Scoped to one entity.** Writes go only to a purpose-built `observations` store that Patriot One owns — a sibling of the operational records it already reads, not a source system. There is still no path to mutate Salesforce, the intranet, or SOPs.
-- **Validated interface, not free SQL.** Observation create/update goes through a defined interface with field validation and an enforced state machine, not the read-only SQL tool. The SQL guard is unchanged.
-- **Human-controlled lifecycle.** Employees can create observations and append detail; risk, phase, ownership, and closure are leadership-assigned. Corrective actions remain in Salesforce and are referenced (read), never written, by the bot.
-- **Auditable and retained.** Phase/status transitions are retained as an audit trail; records are kept a minimum of 3 years per QP-160-1 §9.
+```mermaid
+flowchart LR
+    S["Slack<br/>threads · modals · buttons · Canvas · Home"] <--> AG["Agent loop<br/>Claude"]
+    AG -->|read-only SQL| MIR[("Salesforce mirror<br/>Postgres")]
+    AG -->|write via connected app| SF[("Salesforce<br/>Observation__c")]
+    SF -. continuous refresh .-> MIR
+```
+
+- **Separate write lane.** Observation create/update goes through a dedicated Salesforce **connected app** (JWT auth) via the REST API, limited by permission set to `Observation__c` only. The read-only SQL tool and its guard are unchanged; the two paths share no code.
+- **Reads stay read-only.** The bot continues to answer from the read-only mirror. Newly written observations flow into the mirror on its next refresh, so reads never touch a live write path.
+- **Scoped by permission.** The connected app can create/edit exactly one object. It cannot mutate loads, accounts, billing, or any other Salesforce data; the intranet and SOPs remain read-only as before.
+- **Slack-native interface.** Intake is conversational; field edits use Block Kit modals; actions (advance phase, assign owner, set risk, close) use message buttons; the monthly review and trend report render as a Slack Canvas. No separate portal.
+- **Human-controlled lifecycle.** Employees create observations and append detail; risk, phase, ownership, and closure are leadership-assigned. Corrective actions are created and managed in Salesforce by leadership and referenced by native lookup, never written by the bot.
+- **Auditable and retained.** Salesforce field history captures phase/status transitions; records are kept a minimum of 3 years per QP-160-1 §9.
+
+The Salesforce CLI (`sf`) is used for **setup and admin** — deploying the object, fields, and permission set, and bulk operations. Live per-observation writes use the REST API directly (same connected-app auth), not a CLI subprocess.
 
 ## Reasoning engine
 
