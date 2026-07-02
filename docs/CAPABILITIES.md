@@ -63,13 +63,13 @@ Submit an observation in plain language and the bot captures it, asks the right 
 - *"@Patriot One I keep seeing carrier fallout on our reefer lanes in the last few weeks."*
 - *"remember this as an observation: billing handoffs are slipping when the POD comes in late."*
 
-The bot will guide the submission, assign an Observation ID (`JUNE-001`), suggest a classification and affected Quality Objectives, surface similar past observations, and flag potential trends — then generate a monthly trend report ahead of the first-Thursday review. All suggestions are decision support; leadership validates, prioritizes, and decides.
+The bot will guide the submission, assign an Observation ID (`JUNE-001`), suggest a classification and affected Quality Objectives, surface similar past observations, and flag potential trends — then generate a monthly trend report ahead of the first-Thursday review. Observations are stored in Salesforce (`Observation__c`, alongside the Corrective Action Program), and the whole lifecycle — submit, edit, review — stays in Slack. All suggestions are decision support; leadership validates, prioritizes, and decides.
 
 ## Safety guarantees
 
 - Read-only to source systems: only `SELECT`/`WITH` queries run against them; everything else is rejected.
 - Row and time caps on every query.
-- No path to modify Salesforce, the intranet, or any source system. The one controlled write — Continual Improvement observations — goes only to Patriot One's own record store, never to a source system.
+- No path to modify existing Salesforce data, the intranet, or any source system. The one controlled write — Continual Improvement observations — goes through a scoped connected app limited to the `Observation__c` object, and nothing else.
 - Sensitive tables are excluded from the live-records API.
 
 ---
